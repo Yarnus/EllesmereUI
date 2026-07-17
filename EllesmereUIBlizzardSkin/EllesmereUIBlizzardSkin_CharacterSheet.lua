@@ -1391,10 +1391,13 @@ local function SkinCharacterSheet()
 
         if #betterItems > 0 then
             GameTooltip:AddLine(" ")
-            GameTooltip:AddLine(
-                string.format(L("You have %d better item%s in inventory"), #betterItems, #betterItems == 1 and "" or "s"),
-                0.2, 1, 0.2
-            )
+            local betterItemText
+            if #betterItems == 1 then
+                betterItemText = EllesmereUI.Lf("You have %d better item in inventory", #betterItems)
+            else
+                betterItemText = EllesmereUI.Lf("You have %d better items in inventory", #betterItems)
+            end
+            GameTooltip:AddLine(betterItemText, 0.2, 1, 0.2)
             GameTooltip:AddLine(" ")
 
             -- Show up to 10 items with icons and slots (slot on right side)
