@@ -472,7 +472,7 @@ qolFrame:SetScript("OnEvent", function(self)
             if trainBtn then trainBtn:Show(); RefreshButton(); return end
 
             trainBtn = CreateFrame("Button", "EUI_TrainAllButton", ClassTrainerFrame, "MagicButtonTemplate")
-            trainBtn:SetText(EllesmereUI.L("Train All"))
+            trainBtn:SetText("Train All")
             trainBtn:SetHeight(ClassTrainerTrainButton:GetHeight() or 22)
             trainBtn:SetWidth(80)
             trainBtn:SetPoint("RIGHT", ClassTrainerTrainButton, "LEFT", -2, 0)
@@ -496,13 +496,9 @@ qolFrame:SetScript("OnEvent", function(self)
             trainBtn:SetScript("OnEnter", function(self)
                 local n, gold = TrainableSummary()
                 if n <= 0 then return end
-                local cost = C_CurrencyInfo.GetCoinTextureString(gold)
-                local msg
-                if n == 1 then
-                    msg = EllesmereUI.Lf("Learn %d skill for %s", n, cost)
-                else
-                    msg = EllesmereUI.Lf("Learn %d skills for %s", n, cost)
-                end
+                local msg = string.format("Learn %d skill%s for %s",
+                    n, n == 1 and "" or "s",
+                    C_CurrencyInfo.GetCoinTextureString(gold))
                 EllesmereUI.ShowWidgetTooltip(self, msg)
             end)
             trainBtn:SetScript("OnLeave", function() EllesmereUI.HideWidgetTooltip() end)
@@ -1131,7 +1127,7 @@ do
             bg:SetColorTexture(0.133, 0.133, 0.133, 1)
             local txt = overlay:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
             txt:SetPoint("CENTER")
-            txt:SetText(EllesmereUI.L("Click to Show"))
+            txt:SetText("Click to Show")
             txt:SetTextColor(0.7, 0.7, 0.7, 1)
             overlay:SetScript("OnClick", function(self)
                 self:Hide()
@@ -1650,7 +1646,7 @@ do
         local fs = durWarnOverlay:CreateFontString(nil, "OVERLAY")
         fs:SetFont(EllesmereUI.EXPRESSWAY or "Fonts\\FRIZQT__.TTF", 18, EllesmereUI.GetFontOutlineFlag("extras"))
         fs:SetPoint("CENTER")
-        fs:SetText(EllesmereUI.L("Low Durability"))
+        fs:SetText("Low Durability")
         durWarnOverlay._text = fs
 
         local function ApplySettings()
@@ -1692,7 +1688,7 @@ do
 
         durWarnOverlay._show = function(pct)
             ApplySettings()
-            durWarnOverlay._text:SetText(EllesmereUI.Lf("Low Durability (%d%%)", math.floor(pct)))
+            durWarnOverlay._text:SetText("Low Durability (" .. math.floor(pct) .. "%)")
             durWarnOverlay:Show()
             ag:Play()
         end
@@ -1713,7 +1709,7 @@ do
     EllesmereUI._durWarnPreview = function()
         CreateDurabilityWarning()
         durWarnOverlay._show(25)
-        durWarnOverlay._text:SetText(EllesmereUI.L("Low Durability (Preview)"))
+        durWarnOverlay._text:SetText("Low Durability (Preview)")
     end
 
     EllesmereUI._durWarnHidePreview = function()
@@ -3502,3 +3498,4 @@ do
         InstallHook()
     end)
 end
+

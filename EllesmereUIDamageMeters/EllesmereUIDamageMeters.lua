@@ -1206,7 +1206,7 @@ local function FormatBarValue(amt, perSec, numFmt)
 end
 
 local function StripRealm(name)
-    if not name then return L("Unknown") end
+    if not name then return "Unknown" end
     if Ambiguate then return Ambiguate(name, "short") or name end
     return name
 end
@@ -1527,7 +1527,7 @@ local function EnsureTooltipFrame()
     _ttFrame._combatMsg:SetJustifyH("CENTER"); _ttFrame._combatMsg:SetWordWrap(true)
     SetDMFont(_ttFrame._combatMsg, 10)
     _ttFrame._combatMsg:SetTextColor(0.6, 0.6, 0.6, 1)
-    _ttFrame._combatMsg:SetText(L("Detailed information is\nsecret while in combat"))
+    _ttFrame._combatMsg:SetText("Detailed information is\nsecret while in combat")
     _ttFrame._combatMsg:Hide()
 
     _ttFrame:SetScript("OnShow", function() _ttVisible = true end)
@@ -1649,9 +1649,9 @@ local function PopulatePreview(bar, curSession, curSessionID, curDMType)
                 else b.fill:SetStatusBarColor(0.60, 0.08, 0.08) end
                 local spellName = ev.spellName
                 if not spellName or (issecretvalue and issecretvalue(spellName)) or spellName == "" then
-                    if isHeal then spellName = L("Heal")
-                    elseif evType == "SWING_DAMAGE" then spellName = L("Melee")
-                    else spellName = L("Unknown") end
+                    if isHeal then spellName = "Heal"
+                    elseif evType == "SWING_DAMAGE" then spellName = "Melee"
+                    else spellName = "Unknown" end
                 end
                 b.label:SetTextColor(1, 1, 1); b.amount:SetTextColor(1, 1, 1)
                 -- Label: time before death + spell name
@@ -1662,8 +1662,7 @@ local function PopulatePreview(bar, curSession, curSessionID, curDMType)
                 local amtStr = isHeal and ("+" .. AbbrevNumber(math.abs(amt))) or ("-" .. AbbrevNumber(amt))
                 local overkill = ev.overkill
                 if isFatal and overkill and type(overkill) == "number" and overkill > 0 then
-                    b.amount:SetText(EllesmereUI.Lf("%s |cffff3333(%s overkill)|r (%s)",
-                        amtStr, AbbrevNumber(overkill), format("%.0f%%", hpPct * 100)))
+                    b.amount:SetText(amtStr .. " |cffff3333(" .. AbbrevNumber(overkill) .. " overkill)|r (" .. format("%.0f%%", hpPct * 100) .. ")")
                 else
                     b.amount:SetText(amtStr .. " (" .. format("%.0f%%", hpPct * 100) .. ")")
                 end
@@ -1790,7 +1789,7 @@ local function PopulatePreview(bar, curSession, curSessionID, curDMType)
                 spellName = C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName(spell.spellID)
                 if issecretvalue and issecretvalue(spellName) then spellName = nil end
             end
-            b.label:SetText(spellName or spell.creatureName or L("Unknown"))
+            b.label:SetText(spellName or spell.creatureName or "Unknown")
             if canPercent and totalDmg > 0 then
                 b.amount:SetText(format("%s  %.1f%%", AbbrevNumber(entry.amount), (entry.amount / totalDmg) * 100))
             else
@@ -1811,7 +1810,7 @@ local function PopulatePreview(bar, curSession, curSessionID, curDMType)
                 _ttFrame._tgtDivider:SetHeight(PhysicalPixels(1)); _ttFrame._tgtDivider:SetColorTexture(1, 1, 1, 0.15)
                 _ttFrame._tgtLabel = _ttFrame:CreateFontString(nil, "OVERLAY")
                 SetDMFont(_ttFrame._tgtLabel, 9); _ttFrame._tgtLabel:SetTextColor(0.6, 0.6, 0.6, 1)
-                _ttFrame._tgtLabel:SetText(L("Targets"))
+                _ttFrame._tgtLabel:SetText("Targets")
                 _ttFrame._tgtBars = {}
                 for ti = 1, 3 do
                     local tb = {}
@@ -2288,7 +2287,7 @@ local function CreateDMWindow(winIdx)
                 end
                 if not hasRecap then
                     EnsureTooltipFrame()
-                    local playerName = StripRealm(bar._src.name) or L("Unknown")
+                    local playerName = StripRealm(bar._src.name) or "Unknown"
                     _ttFrame._hdrText:SetText(playerName .. "'s Death Recap")
                     local cfg2 = DB()
                     local hc = cfg2.hdrBgColor; local hR = hc and hc.r or 0x1B/255; local hG = hc and hc.g or 0x1B/255; local hB = hc and hc.b or 0x1B/255
@@ -2298,7 +2297,7 @@ local function CreateDMWindow(winIdx)
                     else local tc = cfg2.hdrTextColor; tR = tc and tc.r or 1; tG = tc and tc.g or 1; tB = tc and tc.b or 1 end
                     _ttFrame._hdrText:SetTextColor(tR, tG, tB, 1)
                     for bi = 1, #_ttBars do if _ttBars[bi] then _ttBars[bi].row:Hide() end end
-                    _ttFrame._combatMsg:SetText(L("No death recap available"))
+                    _ttFrame._combatMsg:SetText("No death recap available")
                     _ttFrame._combatMsg:Show()
                     _ttFrame:SetSize(TT_WIDTH, TT_HDR_H + 40)
                     _ttFrame:ClearAllPoints()
@@ -2326,7 +2325,7 @@ local function CreateDMWindow(winIdx)
                 _ttFrame._hdrText:SetTextColor(tR, tG, tB, 1)
                 -- Hide bars, show combat message
                 for bi = 1, #_ttBars do if _ttBars[bi] then _ttBars[bi].row:Hide() end end
-                _ttFrame._combatMsg:SetText(L("Detailed information is\nsecret while in combat"))
+                _ttFrame._combatMsg:SetText("Detailed information is\nsecret while in combat")
                 _ttFrame._combatMsg:Show()
                 _ttFrame:SetSize(TT_WIDTH, TT_HDR_H + 40)
                 _ttFrame:ClearAllPoints()
@@ -3755,9 +3754,9 @@ local function CreateDMWindow(winIdx)
                     -- Label: time before death + spell name
                     local spellName = ev.spellName
                     if not spellName or (issecretvalue and issecretvalue(spellName)) or spellName == "" then
-                        if isHeal then spellName = L("Heal")
-                        elseif evType == "SWING_DAMAGE" then spellName = L("Melee")
-                        else spellName = L("Unknown") end
+                        if isHeal then spellName = "Heal"
+                        elseif evType == "SWING_DAMAGE" then spellName = "Melee"
+                        else spellName = "Unknown" end
                     end
                     local td = deathTime - (ev.timestamp or deathTime)
                     local timeStr = format("-%.1fs", td)
@@ -3776,8 +3775,7 @@ local function CreateDMWindow(winIdx)
                     end
                     local overkill = ev.overkill
                     if isFatal and overkill and type(overkill) == "number" and overkill > 0 then
-                        bar.amount:SetText(EllesmereUI.Lf("%s |cffff3333(%s overkill)|r (%s)",
-                            amtStr, AbbrevNumber(overkill), format("%.0f%%", hpPct * 100)))
+                        bar.amount:SetText(amtStr .. " |cffff3333(" .. AbbrevNumber(overkill) .. " overkill)|r (" .. format("%.0f%%", hpPct * 100) .. ")")
                     else
                         bar.amount:SetText(amtStr .. " (" .. format("%.0f%%", hpPct * 100) .. ")")
                     end
@@ -3896,7 +3894,7 @@ local function CreateDMWindow(winIdx)
                 SetDMFont(bar.label, leftFS); SetDMFont(bar.amount, rightFS)
                 local spellName
                 if spell.spellID then local okS, sn = pcall(function() return C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName(spell.spellID) end); spellName = (okS and sn) or nil end
-                bar.label:SetText(spellName or spell.creatureName or L("Unknown"))
+                bar.label:SetText(spellName or spell.creatureName or "Unknown")
                 if canPercent and totalDmg > 0 then
                     bar.amount:SetText(format("%s  %.1f%%", AbbrevNumber(entry.amount), (entry.amount / totalDmg) * 100))
                 else
@@ -3921,7 +3919,7 @@ local function CreateDMWindow(winIdx)
                     W._targetDivider:SetHeight(PhysicalPixels(1)); W._targetDivider:SetColorTexture(1, 1, 1, 0.15)
                     W._targetLabel = W.srcContent:CreateFontString(nil, "OVERLAY")
                     SetDMFont(W._targetLabel, leftFS - 1)
-                    W._targetLabel:SetTextColor(0.6, 0.6, 0.6, 1); W._targetLabel:SetText(L("Targets"))
+                    W._targetLabel:SetTextColor(0.6, 0.6, 0.6, 1); W._targetLabel:SetText("Targets")
                 end
                 W._targetDivider:ClearAllPoints()
                 W._targetDivider:SetPoint("TOPLEFT", W.srcContent, "TOPLEFT", 0, divY)
@@ -4165,10 +4163,10 @@ local function CreateDMWindow(winIdx)
             homeAddBtn._plus:SetText("+")
             homeAddBtn._plus:SetTextColor(1, 1, 1, 0.3)
             homeAddBtn._lbl:SetFont(fontPath, CTX_FONT_SZ, outline)
-            homeAddBtn._lbl:SetText(L("ADD NEW"))
+            homeAddBtn._lbl:SetText("ADD NEW")
             homeAddBtn._lbl:SetTextColor(1, 1, 1, 0.3)
             homeAddBtn._hint:SetFont(fontPath, 9, outline)
-            homeAddBtn._hint:SetText(L("(middle click to remove)"))
+            homeAddBtn._hint:SetText("(middle click to remove)")
             homeAddBtn._hint:SetTextColor(1, 1, 1, 0.3)
             -- Center the group: offset label so plus+label+hint are visually centered
             local plusW = homeAddBtn._plus:GetStringWidth() + 4
